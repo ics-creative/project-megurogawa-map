@@ -7,14 +7,9 @@ html, body {
 
 body {
   overflow: hidden;
-
-  font-family: -apple-system;
-
+  font-family: -apple-system sans-serif;
 }
 
-img {
-  vertical-align: bottom;
-}
 
 .app {
 
@@ -28,22 +23,19 @@ img {
   $item_gap : 2px;
 
 
+  grid-template-columns: 1fr (400px + $item_gap * 2 + 20px) ;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas: 'header header' 'map list';
+
   @media (max-width : $media_tablet){
     grid-template-columns: 1fr;
     grid-template-rows: 60px 1fr 0.5fr;
     grid-template-areas: 'header' 'map' 'list';
   }
-  @media (min-width : $media_tablet) {
-    grid-template-columns: 1fr (400px + $item_gap * 2) ;
-    grid-template-rows: 60px 1fr;
-    grid-template-areas: 'header header' 'map list';
-  }
-
-
 
   &-header {
     grid-area: header;
-    background: #E91E63;
+    background: #FF80AB;
   }
 
   h1 {
@@ -54,6 +46,13 @@ img {
     font-family: serif;
     font-feature-settings: "palt";
     font-weight: 100;
+
+    @media (max-width : $media_mobile) {
+      text-align: center;
+    }
+    @media (min-width : $media_mobile) {
+      text-align: left;
+    }
   }
 
   &-map {
@@ -121,6 +120,11 @@ img {
 
   }
 
+
+  &-map__info-img {
+    user-select: none;
+    pointer-events: none;
+  }
 }
 
 

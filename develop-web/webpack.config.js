@@ -1,10 +1,11 @@
+const webpack = require('webpack');
 const enabledSourceMap = true;
-
 
 module.exports = {
 
   // メインとなるJavaScriptファイル（エントリーポイント）
   entry: [
+    'whatwg-fetch', // fetchのPolyfillも含める
     'babel-polyfill', // Polyfillも含める
     './src/index.js',
   ],
@@ -81,6 +82,14 @@ module.exports = {
 
     ]
   },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"',
+      },
+    }),
+  ],
 
   resolve: {
     // Webpackで利用するときの設定
