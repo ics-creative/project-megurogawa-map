@@ -10,7 +10,6 @@ body {
   font-family: -apple-system sans-serif;
 }
 
-
 .app {
 
   width: 100%;
@@ -20,14 +19,13 @@ body {
   $media_mobile: 640px;
   $media_tablet: 980px;
   $media_desktop: 1200px;
-  $item_gap : 2px;
+  $item_gap: 2px;
 
-
-  grid-template-columns: 1fr (400px + $item_gap * 2 + 20px) ;
+  grid-template-columns: 1fr (400px + $item_gap * 2 + 20px);
   grid-template-rows: 60px 1fr;
   grid-template-areas: 'header header' 'map list';
 
-  @media (max-width : $media_tablet){
+  @media (max-width: $media_tablet) {
     grid-template-columns: 1fr;
     grid-template-rows: 60px 1fr 0.5fr;
     grid-template-areas: 'header' 'map' 'list';
@@ -47,10 +45,10 @@ body {
     font-feature-settings: "palt";
     font-weight: 100;
 
-    @media (max-width : $media_mobile) {
+    @media (max-width: $media_mobile) {
       text-align: center;
     }
-    @media (min-width : $media_mobile) {
+    @media (min-width: $media_mobile) {
       text-align: left;
     }
   }
@@ -72,21 +70,20 @@ body {
 
     &-item {
 
-      @media (max-width : $media_mobile) {
+      @media (max-width: $media_mobile) {
         height: calc((100vw - 2px * 2) / 4);
         width: calc((100vw - 2px * 2) / 4);
       }
-      @media (min-width : $media_mobile) and (max-width : $media_tablet) {
+      @media (min-width: $media_mobile) and (max-width: $media_tablet) {
         height: calc((100vw - 2px * 2) / 8);
         width: calc((100vw - 2px * 2) / 8);
       }
-      @media (min-width : $media_tablet) {
+      @media (min-width: $media_tablet) {
         height: 100px;
         width: 100px;
       }
 
       margin: 0;
-
 
       box-sizing: border-box;
       border: ($item_gap / 2) solid transparent;
@@ -94,7 +91,6 @@ body {
 
       transition: border 0.6s;
       transition-property: filter;
-
 
       &:hover, &:focus {
         border: ($item_gap / 2) solid #E91E63;
@@ -123,11 +119,19 @@ body {
 
   }
 
-
   &-map__info-img {
     user-select: none;
     pointer-events: none;
+    border-radius: 3px;
   }
+
 }
 
+.app-map {
+
+  // 無理やり・・・
+  img[src^="data/thumbs"] {
+    border-radius: 3px;
+  }
+}
 

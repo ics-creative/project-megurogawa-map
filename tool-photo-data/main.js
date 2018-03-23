@@ -50,17 +50,19 @@ async function load() {
   // 画像の縮小処理
   // ===================================
   {
+    const border = await Jimp.read("./assets/border.png");
+
     fileList.map(
       (file) => Jimp.read(`${SOURCE_DIR}/${file}`)
         .then((lenna) => {
 
           lenna.quality(90);
 
-          lenna.cover(1024, 1024 * 3 / 4) // resize
-            .write(`${OUTPUT_DIR}/medium/${file}`); // save
-
-          lenna.cover(512, 512 * 3 / 4) // resize
-            .write(`${OUTPUT_DIR}/small/${file}`); // save
+//          lenna.cover(1024, 1024 * 3 / 4) // resize
+//            .write(`${OUTPUT_DIR}/medium/${file}`); // save
+//
+//          lenna.cover(512, 512 * 3 / 4) // resize
+//            .write(`${OUTPUT_DIR}/small/${file}`); // save
 
           lenna.cover(256, 256) // resize
             .write(`${OUTPUT_DIR}/thumbs/${file}`); // save

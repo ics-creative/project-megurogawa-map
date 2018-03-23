@@ -26,11 +26,26 @@ export async function initMap() {
 
   const dataList = await (await fetch(getJsonUrl())).json();
 
-  const features = dataList.map(value => {
+  let latitudeMin = Number.MAX_VALUE;
+  let latitudeMax = Number.MIN_VALUE;
+  let longitudeMin = Number.MAX_VALUE;
+  let longitudeMax = Number.MIN_VALUE;
+
+  const featuresPre = dataList.map(value => {
+
+    if (latitudeMin > value.latitude) latitudeMin = value.latitude;
+    if (latitudeMax < value.latitude) latitudeMax = value.latitude;
+    if (longitudeMin > value.longitude) longitudeMin = value.longitude;
+    if (longitudeMax < value.longitude) longitudeMax = value.longitude;
+
     return {
       position: new google.maps.LatLng(value.latitude, value.longitude),
       file: value.file,
     };
+  });
+
+  const features = featuresPre.sort((a, b) => {
+    return b.position.lat() - a.position.lat();
   });
 
   new Vue({
@@ -64,11 +79,13 @@ export async function initMap() {
   });
 
   // Google Map
-
+  const latitudeCenter = (latitudeMin + latitudeMax) / 2;
+  const longitudeCenter = (longitudeMin + longitudeMax) / 2;
   map = window.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 16,
-    center: new google.maps.LatLng(dataList[0].latitude, dataList[0].longitude),
+    zoom: 14,
+    center: new google.maps.LatLng(latitudeCenter, longitudeCenter),
     mapTypeId: 'roadmap',
+    heading: 180
   });
 
   /* スタイル付き地図 */
@@ -100,6 +117,7 @@ export async function initMap() {
     const marker = new google.maps.Marker({
       position: feature.position,
       icon: icon,
+      title: 'marker-tag-for-visual',
       map: map,
     });
 
