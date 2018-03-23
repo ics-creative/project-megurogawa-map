@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"/>
+  <title>目黒川 桜マップ by @clockmaker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="google" content="notranslate"/>
+  <meta name="referrer" content="unsafe-url"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="assets/apple-icon.png"/>
+  <link rel="icon" type="image/png" href="assets/icon.png"/>
+  <script defer src="main.js"></script>
+</head>
+<body>
+  <div id="app" class="app">
+  </div>
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-34243464-4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    if (location.href.indexOf('ics-creative.github.io') > -1) {
+      gtag('js', new Date());
+
+      gtag('config', 'UA-34243464-4');
+    }
+  </script>
+</body>
+</html>
