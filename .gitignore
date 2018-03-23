@@ -1,4 +1,6 @@
-/.idea
-/develop-web/node_modules
-/develop-web/package-lock.json
-/develop-web/yarn.lock
+.idea
+node_modules
+package-lock.json
+yarn.lock
+.DS_Store
+Thumbs.db
