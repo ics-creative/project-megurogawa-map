@@ -90,14 +90,17 @@ body {
 
       box-sizing: border-box;
       border: ($item_gap / 2) solid transparent;
+      filter: brightness(1.0);
 
       transition: border 0.6s;
+      transition-property: filter;
 
 
       &:hover, &:focus {
         border: ($item_gap / 2) solid #E91E63;
         outline: none;
         transition: all 0.1s;
+        filter: brightness(1.1);
       }
 
       img {

@@ -1,23 +1,30 @@
 import Vue from 'vue';
 
+const isMobile = matchMedia('(max-width : 640px)').matches;
+
 const createInfoContent = (file) => {
-        const isMobile = matchMedia('(max-width : 640px)').matches;
 
-        const w = isMobile ? 120 : 320;
-        const h = isMobile ? 80 : 240;
+  const w = isMobile ? 160 : 320;
+  const h = w * 3 / 4;
 
-        return `
+  return `
           <div class="sample">
-            <img src="images/${file}" 
-              width="${w}" height="${h}"
-              class="app-map__info-img" />
+            <picture>
+              <source media="(max-width: 640px)" srcset="${getImageUrl(file, 'small')}">
+              <img src="${getImageUrl(file, 'medium')}" 
+                width="${w}" height="${h}"
+                class="app-map__info-img" />
+            </picture>
           </div>`;
-      }
-;
+};
+
+const cacheClearPostfix = `?cc=1`;
+const getImageUrl = (fileName, size) => `data/${size}/${fileName}${cacheClearPostfix}`;
+const getJsonUrl = () => `data/data.json${cacheClearPostfix}`;
 
 export async function initMap() {
 
-  const dataList = await (await fetch('data/data.json')).json();
+  const dataList = await (await fetch(getJsonUrl())).json();
 
   const features = dataList.map(value => {
     return {
@@ -36,7 +43,7 @@ export async function initMap() {
           <button v-for="item in items"
                   class="app-list-item"
                   v-on:click="select(item)">
-            <img v-bind:src="'images/' + item.file" />
+            <img v-bind:src="'data/thumbs/' + item.file + '?cc=1'" />
           </button>
         </div>
       </div>`,
@@ -83,10 +90,11 @@ export async function initMap() {
   // Create markers.
   const markerDataList = features.map(function (feature) {
 
+    const size = isMobile ? 48 : 64;
     const icon = {
-      url: `icons/${feature.file}`,
-      size: new google.maps.Size(40, 30),
-      scaledSize: new google.maps.Size(40, 30),
+      url: getImageUrl(feature.file, 'thumbs'),
+      size: new google.maps.Size(size, size),
+      scaledSize: new google.maps.Size(size, size),
     };
 
     const marker = new google.maps.Marker({
@@ -107,5 +115,4 @@ export async function initMap() {
       infoWindow.open(map, markerData.marker); // 吹き出しの表示
     });
   });
-
 }
