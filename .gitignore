@@ -1,0 +1,4 @@
+/.idea
+/develop-web/node_modules
+/develop-web/package-lock.json
+/develop-web/yarn.lock
