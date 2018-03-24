@@ -41,6 +41,7 @@ export async function initMap() {
     return {
       position: new google.maps.LatLng(value.latitude, value.longitude),
       file: value.file,
+      id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
     };
   });
 
@@ -48,30 +49,46 @@ export async function initMap() {
     return b.position.lat() - a.position.lat();
   });
 
-  new Vue({
+  const vueApp = new Vue({
     el: '#app',
     template: `
       <div class="app">
-        <header class="app-header"><h1>🌸 目黒川 桜マップ</h1></header>
+        <header class="app-header"><h1>🌸 目黒川さくら写真マップ</h1></header>
         <div class="app-map" id="map"></div>
         <div class="app-list">
           <button v-for="item in items"
                   class="app-list-item"
-                  v-on:click="select(item)">
+                  v-bind:id="'item_' + item.id"
+                  v-on:click="select(item)"
+                  v-bind:aria-selected="item.id === currentSelectedId">
             <img v-bind:src="'data/thumbs/' + item.file + '?cc=1'" />
           </button>
         </div>
       </div>`,
     data: {
-      items: features
+      items: features,
+      currentSelectedId: -1,
+      scrollTop: 0,
     },
     methods: {
       select(markerData) {
+
+        this.currentSelectedId = markerData.id;
+
         infoWindow.setContent(createInfoContent(markerData.file));
         infoWindow.open(map); // 吹き出しの表示
         infoWindow.setPosition(markerData.position);
+      },
+
+      /**
+       * 外から選択を更新する
+       * @param markerData
+       */
+      goScroll(markerData){
+        this.currentSelectedId = markerData.id;
+        document.querySelector(`.app-list`).scrollTop = document.querySelector(`#item_${markerData.id}`).offsetTop;
       }
-    }
+    },
   });
 
   const infoWindow = new google.maps.InfoWindow({ // 吹き出しの追加
@@ -85,20 +102,26 @@ export async function initMap() {
     zoom: 14,
     center: new google.maps.LatLng(latitudeCenter, longitudeCenter),
     mapTypeId: 'roadmap',
-    heading: 180
+
+    disableDefaultUI: true,
   });
 
   /* スタイル付き地図 */
   const styleOptions = [{
     featureType: 'poi',
     elementType: 'labels',
-    stylers: [{visibility: 'off'}]
+    stylers: [{visibility: 'off'}],
   },
     {
       featureType: 'all',
       elementType: 'labels',
-      stylers: [{hue: '#F8BBD0'}]
-    }
+      stylers: [{hue: '#F8BBD0'}, {lightness: +50}],
+    },
+    {
+      featureType: 'all',
+      elementType: 'geometry',
+      stylers: [{lightness: +50}],
+    },
   ];
   const lopanType = new google.maps.StyledMapType(styleOptions);
   map.mapTypes.set('noText', lopanType);
@@ -123,7 +146,8 @@ export async function initMap() {
 
     return {
       file: feature.file,
-      marker: marker
+      marker: marker,
+      id: feature.id,
     };
   });
 
@@ -131,6 +155,10 @@ export async function initMap() {
     markerData.marker.addListener('click', (event) => { // マーカーをクリックしたとき
       infoWindow.setContent(createInfoContent(markerData.file));
       infoWindow.open(map, markerData.marker); // 吹き出しの表示
+
+
+
+      vueApp.goScroll(markerData);
     });
   });
 }

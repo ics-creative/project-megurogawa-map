@@ -15,7 +15,7 @@ module.exports = {
     //  出力ファイルのディレクトリ名
     path: `${__dirname}/../docs`,
     // 出力ファイル名
-    filename: 'main.js'
+    filename: 'main.js',
   },
 
   module: {
@@ -33,10 +33,10 @@ module.exports = {
                 // env を指定することで、ES2017 を ES5 に変換。
                 // {modules: false}にしないと import 文が Babel によって CommonJS に変換され、
                 // webpack の Tree Shaking 機能が使えない
-                ['env', {'modules': false}]
-              ]
-            }
-          }
+                ['env', {'modules': false}],
+              ],
+            },
+          },
         ],
         // node_modules は除外する
         exclude: /node_modules/,
@@ -61,7 +61,7 @@ module.exports = {
               // 0 => no loaders (default);
               // 1 => postcss-loader;
               // 2 => postcss-loader, sass-loader
-              importLoaders: 2
+              importLoaders: 2,
             },
           },
           {
@@ -77,18 +77,18 @@ module.exports = {
             options: {
               // ソースマップの利用有無
               sourceMap: enabledSourceMap,
-            }
-          }
+            },
+          },
         ],
       },
       {
         // 対象となるファイルの拡張子
         test: /\.(gif|png|jpg|eot|wof|woff|woff2|ttf|svg)$/,
         // 画像をBase64として取り込む
-        loader: 'url-loader'
-      }
+        loader: 'url-loader',
+      },
 
-    ]
+    ],
   },
 
   plugins: [
@@ -102,15 +102,15 @@ module.exports = {
   resolve: {
     // Webpackで利用するときの設定
     alias: {
-      vue: 'vue/dist/vue.js'
-    }
+      vue: 'vue/dist/vue.js',
+    },
   },
 
   // ローカル開発用環境を立ち上げる
   // 実行時にブラウザが自動的に localhost を開く
   devServer: {
     contentBase: `${__dirname}/../docs`,
-    open: true
-  }
-
+    open: true,
+    host: '192.168.11.3',
+  },
 };
