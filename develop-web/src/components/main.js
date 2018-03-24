@@ -4,7 +4,7 @@ const isMobile = matchMedia('(max-width : 640px)').matches;
 
 const createInfoContent = (file) => {
 
-  const w = isMobile ? 160 : 320;
+  const w = isMobile ? 200 : 400;
   const h = w * 3 / 4;
 
   return `
@@ -53,7 +53,7 @@ export async function initMap() {
     el: '#app',
     template: `
       <div class="app">
-        <header class="app-header"><h1>🌸 目黒川さくら写真マップ</h1></header>
+        <header class="app-header"><h1>目黒川さくら写真マップ</h1></header>
         <div class="app-map" id="map"></div>
         <div class="app-list">
           <button v-for="item in items"
@@ -69,6 +69,7 @@ export async function initMap() {
       items: features,
       currentSelectedId: -1,
       scrollTop: 0,
+      isFirstSelected: false,
     },
     methods: {
       select(markerData) {
@@ -78,13 +79,20 @@ export async function initMap() {
         infoWindow.setContent(createInfoContent(markerData.file));
         infoWindow.open(map); // 吹き出しの表示
         infoWindow.setPosition(markerData.position);
+
+        if (this.isFirstSelected === false) {
+          map.setZoom(isMobile ? 17 : 18);
+          this.isFirstSelected = true;
+        }
+
+        map.panTo(markerData.position);
       },
 
       /**
        * 外から選択を更新する
        * @param markerData
        */
-      goScroll(markerData){
+      goScroll(markerData) {
         this.currentSelectedId = markerData.id;
         document.querySelector(`.app-list`).scrollTop = document.querySelector(`#item_${markerData.id}`).offsetTop;
       }
@@ -92,7 +100,7 @@ export async function initMap() {
   });
 
   const infoWindow = new google.maps.InfoWindow({ // 吹き出しの追加
-
+    pixelOffset: new google.maps.Size(0, 0)
   });
 
   // Google Map
@@ -102,9 +110,13 @@ export async function initMap() {
     zoom: 14,
     center: new google.maps.LatLng(latitudeCenter, longitudeCenter),
     mapTypeId: 'roadmap',
-
-    disableDefaultUI: true,
+    mapTypeControl: false,
+    streetViewControl: false,
   });
+  map.fitBounds(new google.maps.LatLngBounds(
+    new google.maps.LatLng(latitudeMin, longitudeMin),
+    new google.maps.LatLng(latitudeMax, longitudeMax)
+  ));
 
   /* スタイル付き地図 */
   const styleOptions = [{
@@ -130,10 +142,11 @@ export async function initMap() {
   // Create markers.
   const markerDataList = features.map(function (feature) {
 
-    const size = isMobile ? 48 : 64;
+    const size = isMobile ? 32 : 48;
     const icon = {
       url: getImageUrl(feature.file, 'thumbs'),
       size: new google.maps.Size(size, size),
+      anchor: new google.maps.Point(size / 2, size / 2),
       scaledSize: new google.maps.Size(size, size),
     };
 
@@ -155,8 +168,6 @@ export async function initMap() {
     markerData.marker.addListener('click', (event) => { // マーカーをクリックしたとき
       infoWindow.setContent(createInfoContent(markerData.file));
       infoWindow.open(map, markerData.marker); // 吹き出しの表示
-
-
 
       vueApp.goScroll(markerData);
     });

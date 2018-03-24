@@ -30,9 +30,12 @@ async function load() {
             const gps = exifData.gps;
 
             // 139 + ( 41 ÷ 60 ) + ( 30.3 ÷ 60 ÷ 60 )
-            const latitude = gps.GPSLatitude[0] + gps.GPSLatitude[1] / 60;
-            const longitude = gps.GPSLongitude[0] + gps.GPSLongitude[1] / 60;
-            list.push({file, latitude, longitude});
+            if(gps.GPSLatitude){
+              const latitude = gps.GPSLatitude[0] + gps.GPSLatitude[1] / 60;
+              const longitude = gps.GPSLongitude[0] + gps.GPSLongitude[1] / 60;
+              list.push({file, latitude, longitude});
+            }
+
             resolve();
           }
 
@@ -56,15 +59,15 @@ async function load() {
       (file) => Jimp.read(`${SOURCE_DIR}/${file}`)
         .then((lenna) => {
 
-          lenna.quality(90);
+          lenna.quality(80);
 
-//          lenna.cover(1024, 1024 * 3 / 4) // resize
-//            .write(`${OUTPUT_DIR}/medium/${file}`); // save
-//
-//          lenna.cover(512, 512 * 3 / 4) // resize
-//            .write(`${OUTPUT_DIR}/small/${file}`); // save
+          lenna.cover(1024, 1024 * 3 / 4) // resize
+            .write(`${OUTPUT_DIR}/medium/${file}`); // save
 
-          lenna.cover(256, 256) // resize
+          lenna.cover(512, 512 * 3 / 4) // resize
+            .write(`${OUTPUT_DIR}/small/${file}`); // save
+
+          lenna.cover(128, 128) // resize
             .write(`${OUTPUT_DIR}/thumbs/${file}`); // save
 
 

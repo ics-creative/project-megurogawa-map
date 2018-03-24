@@ -111,6 +111,6 @@ module.exports = {
   devServer: {
     contentBase: `${__dirname}/../docs`,
     open: true,
-    host: '192.168.11.3',
+    host: '10.0.1.5',
   },
 };
