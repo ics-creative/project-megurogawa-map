@@ -18,9 +18,10 @@ const createInfoContent = (file) => {
           </div>`;
 };
 
-const cacheClearPostfix = `?cc=1`;
-const getImageUrl = (fileName, size) => `data/${size}/${fileName}${cacheClearPostfix}`;
-const getJsonUrl = () => `data/data.json${cacheClearPostfix}`;
+const cacheClearPostfixImage = `?cc=1`;
+const cacheClearPostfixJson = `?cc=2`;
+const getImageUrl = (fileName, size) => `data/${size}/${fileName}${cacheClearPostfixImage}`;
+const getJsonUrl = () => `data/data.json${cacheClearPostfixJson}`;
 
 export async function initMap() {
 
