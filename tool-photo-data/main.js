@@ -30,7 +30,7 @@ async function load() {
             const gps = exifData.gps;
 
             // 139 + ( 41 ÷ 60 ) + ( 30.3 ÷ 60 ÷ 60 )
-            if(gps.GPSLatitude){
+            if (gps.GPSLatitude) {
               const latitude = gps.GPSLatitude[0] + gps.GPSLatitude[1] / 60;
               const longitude = gps.GPSLongitude[0] + gps.GPSLongitude[1] / 60;
               list.push({file, latitude, longitude});
@@ -53,27 +53,37 @@ async function load() {
   // 画像の縮小処理
   // ===================================
   {
-    const border = await Jimp.read("./assets/border.png");
+    const border = await Jimp.read('./assets/border.png');
 
     fileList.map(
-      (file) => Jimp.read(`${SOURCE_DIR}/${file}`)
-        .then((lenna) => {
+      async (file) => {
+        const lenna = await Jimp.read(`${SOURCE_DIR}/${file}`);
 
-          lenna.quality(80);
+        lenna.quality(80);
 
+        const outputMedium = `${OUTPUT_DIR}/medium/${file}`;
+        const outputSmall = `${OUTPUT_DIR}/small/${file}`;
+        const outputThumb = `${OUTPUT_DIR}/thumbs/${file}`;
+
+        if (fs.existsSync(outputMedium) === false) {
           lenna.cover(1024, 1024 * 3 / 4) // resize
-            .write(`${OUTPUT_DIR}/medium/${file}`); // save
+            .write(outputMedium); // save
+        }
 
+        if (fs.existsSync(outputSmall) === false) {
           lenna.cover(512, 512 * 3 / 4) // resize
-            .write(`${OUTPUT_DIR}/small/${file}`); // save
+            .write(outputSmall); // save
+        }
 
+        if (fs.existsSync(outputThumb) === false) {
           lenna.cover(128, 128) // resize
-            .write(`${OUTPUT_DIR}/thumbs/${file}`); // save
+            .write(outputThumb); // save
+        }
 
 
-        }).catch((err) => {
-          console.error(err);
-        }));
+      });
+
+
   }
 
 }

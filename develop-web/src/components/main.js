@@ -4,7 +4,7 @@ const isMobile = matchMedia('(max-width : 640px)').matches;
 
 const createInfoContent = (file) => {
 
-  const w = isMobile ? 200 : 400;
+  const w = isMobile ? 200 : 320;
   const h = w * 3 / 4;
 
   return `
@@ -45,8 +45,12 @@ export async function initMap() {
     };
   });
 
+  const calcDistance = (position) => Math.sqrt(
+    (latitudeMin - position.lat()) ** 2
+    + (longitudeMax - position.lng()) ** 2);
+
   const features = featuresPre.sort((a, b) => {
-    return b.position.lat() - a.position.lat();
+    return calcDistance(b.position) - calcDistance(a.position);
   });
 
   const vueApp = new Vue({
@@ -95,12 +99,12 @@ export async function initMap() {
       goScroll(markerData) {
         this.currentSelectedId = markerData.id;
         document.querySelector(`.app-list`).scrollTop = document.querySelector(`#item_${markerData.id}`).offsetTop;
-      }
+      },
     },
   });
 
   const infoWindow = new google.maps.InfoWindow({ // 吹き出しの追加
-    pixelOffset: new google.maps.Size(0, 0)
+    pixelOffset: new google.maps.Size(0, 0),
   });
 
   // Google Map
@@ -115,7 +119,7 @@ export async function initMap() {
   });
   map.fitBounds(new google.maps.LatLngBounds(
     new google.maps.LatLng(latitudeMin, longitudeMin),
-    new google.maps.LatLng(latitudeMax, longitudeMax)
+    new google.maps.LatLng(latitudeMax, longitudeMax),
   ));
 
   /* スタイル付き地図 */
