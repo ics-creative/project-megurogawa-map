@@ -1,10 +1,13 @@
 import {initMap} from './components/main.js';
 import './styles/main.scss';
 import {initMobileUi} from './components/mobile';
+import {initServiceWorker} from './other/sw';
 
 // Google Mapのコード読み込み後に起動
 window.initMap = () => {
   initMap();
+
+  initServiceWorker();
 };
 
 initMobileUi();
