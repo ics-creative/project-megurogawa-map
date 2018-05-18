@@ -1,6 +1,6 @@
+
 export function initServiceWorker(){
-  if ('serviceWorker' in navigator &&
-    (window.location.protocol === 'https:')) {
+  if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
       .then(function (registration) {
         // updatefound is fired if service-worker.js changes.
@@ -34,6 +34,7 @@ export function initServiceWorker(){
           }
         };
       }).catch(function (e) {
+      console.log("😂")
       console.error('Error during service worker registration:', e);
     });
   }

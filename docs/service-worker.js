@@ -4,15 +4,12 @@ const urlsToCache = [
 ];
 
 // service-worker.js
-self.addEventListener('install', function (e) {
-  console.log('[ServiceWorker] Install');
-
+self.addEventListener('install', function (event) {
   // インストール処理
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(urlsToCache))
   );
-
 });
 
 self.addEventListener('activate', function (e) {
@@ -30,7 +27,6 @@ self.addEventListener('fetch', function (event) {
 
         // キャッシュがあったのでレスポンスを返す
         if (response) {
-          console.log('step - 1 - 1');
           console.table(response);
           return response;
         }
